@@ -1,6 +1,7 @@
 //const gpio = require('rpi-gpio');
 //const dhtSensor = require('node-dht-sensor');
 //gpio.setMode(gpio.MODE_BCM);
+const request = require('request');
 
 let Service, Characteristic, HeatingCoolingStateToRelayPin;
 const OFF = true;
@@ -169,8 +170,12 @@ class Thermostat {
   }
 
   readTemperatureFromSensor() {
-    dhtSensor.read(22, this.temperatureSensoridx, (err, temperature, humidity) => {
+    //dhtSensor.read(22, this.temperatureSensoridx, (err, temperature, humidity) 
+    request.get('http://127.0.0.1:8080/json.htm?type=devices&rid='+this.temperatureSensoridx, (err, res, body) => {
       if (!err) {
+        let json = JSON.parse(body);
+        let temperature = json.result[0].Temp.toFixed(0);
+        let humidity = json.result[0].Humidity
         this.currentTemperature = temperature;
         this.currentRelativeHumidity = humidity;
         this.service.setCharacteristic(Characteristic.CurrentTemperature, this.currentTemperature);
