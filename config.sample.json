@@ -11,7 +11,7 @@
   "accessories": [
     {
       "accessory": "Thermostat",
-      "name": "Pi Thermostat",
+      "name": "Thermostat Salon",
       "radiateuridx": 26,
       "temperatureSensoridx": 4,
       "minimumOnOffTime": 120000,
