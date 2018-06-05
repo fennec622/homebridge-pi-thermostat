@@ -13,8 +13,6 @@
       "accessory": "Thermostat",
       "name": "Pi Thermostat",
       "radiateuridx": 26,
-      //"heatRelayPin": 21,
-      //"coolRelayPin": 20,
       "temperatureSensoridx": 4,
       "minimumOnOffTime": 120000,
       "blowerTurnOffTime": 80000,
