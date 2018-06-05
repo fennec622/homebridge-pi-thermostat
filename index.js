@@ -1,6 +1,6 @@
-const gpio = require('rpi-gpio');
-const dhtSensor = require('node-dht-sensor');
-gpio.setMode(gpio.MODE_BCM);
+//const gpio = require('rpi-gpio');
+//const dhtSensor = require('node-dht-sensor');
+//gpio.setMode(gpio.MODE_BCM);
 
 let Service, Characteristic, HeatingCoolingStateToRelayPin;
 const OFF = true;
@@ -18,10 +18,12 @@ class Thermostat {
     this.name = config.name;
     this.maxTemperature = config.maxTemperature || 30;
     this.minTemperature = config.minTemperature || 0;
-    this.fanRelayPin = config.fanRelayPin || 26;
-    this.heatRelayPin = config.heatRelayPin || 21;
-    this.coolRelayPin = config.coolRelayPin || 20;
-    this.temperatureSensorPin = config.temperatureSensorPin || 4;
+    this.radiateuridx = config.radiateuridx || 0;
+    //this.fanRelayPin = config.fanRelayPin || 26;
+    //this.heatRelayPin = config.heatRelayPin || 21;
+    //this.coolRelayPin = config.coolRelayPin || 20;
+    this.temperatureSensoridx = config.temperatureSensoridx || 0;
+    //this.temperatureSensorPin = config.temperatureSensorPin || 4;
     this.minimumOnOffTime = config.minimumOnOffTime || 120000; // In milliseconds
     this.blowerTurnOffTime = config.blowerTurnOffTime || 80000; // In milliseconds
     this.startDelay = config.startDelay || 10000; // In milliseconds
@@ -32,9 +34,9 @@ class Thermostat {
       [Characteristic.CurrentHeatingCoolingState.COOL]: this.coolRelayPin
     };
 
-    gpio.setup(this.fanRelayPin, gpio.DIR_HIGH);
-    gpio.setup(this.heatRelayPin, gpio.DIR_HIGH);
-    gpio.setup(this.coolRelayPin, gpio.DIR_HIGH);
+    //gpio.setup(this.fanRelayPin, gpio.DIR_HIGH);
+    //gpio.setup(this.heatRelayPin, gpio.DIR_HIGH);
+    //gpio.setup(this.coolRelayPin, gpio.DIR_HIGH);
 
     this.currentTemperature = 21;
     this.currentRelativeHumidity = 50;
@@ -45,7 +47,7 @@ class Thermostat {
 
     //Characteristic.TemperatureDisplayUnits.CELSIUS = 0;
     //Characteristic.TemperatureDisplayUnits.FAHRENHEIT = 1;
-    this.temperatureDisplayUnits = Characteristic.TemperatureDisplayUnits.FAHRENHEIT;
+    this.temperatureDisplayUnits = Characteristic.TemperatureDisplayUnits.CELSIUS;
 
     // The value property of CurrentHeatingCoolingState must be one of the following:
     //Characteristic.CurrentHeatingCoolingState.OFF = 0;
@@ -167,7 +169,7 @@ class Thermostat {
   }
 
   readTemperatureFromSensor() {
-    dhtSensor.read(22, this.temperatureSensorPin, (err, temperature, humidity) => {
+    dhtSensor.read(22, this.temperatureSensoridx, (err, temperature, humidity) => {
       if (!err) {
         this.currentTemperature = temperature;
         this.currentRelativeHumidity = humidity;
