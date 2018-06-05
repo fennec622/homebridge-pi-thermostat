@@ -109,7 +109,8 @@ class Thermostat {
         this.log(`STARTING ${this.systemStateName(systemToTurnOn)} in ${this.startDelay / 1000} second(s)`);
         this.startSystemTimer = setTimeout(() => {
           this.log(`START ${this.systemStateName(systemToTurnOn)}`);
-          gpio.write(HeatingCoolingStateToRelayPin[systemToTurnOn], ON);
+          //gpio.write(HeatingCoolingStateToRelayPin[systemToTurnOn], ON);
+          request.get('http://127.0.0.1:8080/json.htm?type=command&param=switchlight&idx='+this.radiateuridx+'&switchcmd=On');
           this.service.setCharacteristic(Characteristic.CurrentHeatingCoolingState, systemToTurnOn);
         }, this.startDelay);
       } else {
@@ -127,7 +128,8 @@ class Thermostat {
   turnOffSystem() {
     if (!this.stopSystemTimer) {
       this.log(`STOP ${this.currentlyRunning} | Blower will turn off in ${this.blowerTurnOffTime / 1000} second(s)`);
-      gpio.write(HeatingCoolingStateToRelayPin[this.currentHeatingCoolingState], OFF);
+      //gpio.write(HeatingCoolingStateToRelayPin[this.currentHeatingCoolingState], OFF);
+      request.get('http://127.0.0.1:8080/json.htm?type=command&param=switchlight&idx='+this.radiateuridx+'&switchcmd=Off');
       this.stopSystemTimer = setTimeout(() => {
         this.service.setCharacteristic(Characteristic.CurrentHeatingCoolingState, Characteristic.CurrentHeatingCoolingState.OFF);
       }, this.blowerTurnOffTime);
