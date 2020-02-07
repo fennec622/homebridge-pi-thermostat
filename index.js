@@ -2,6 +2,7 @@
 //const dhtSensor = require('node-dht-sensor');
 //gpio.setMode(gpio.MODE_BCM);
 const request = require('request');
+var mqtt = require("mqtt");
 
 let Service, Characteristic, HeatingCoolingStateToRelayPin;
 const OFF = true;
@@ -38,7 +39,10 @@ class Thermostat {
     //gpio.setup(this.fanRelayPin, gpio.DIR_HIGH);
     //gpio.setup(this.heatRelayPin, gpio.DIR_HIGH);
     //gpio.setup(this.coolRelayPin, gpio.DIR_HIGH);
-
+    var client  = mqtt.connect('mqtt://127.0.0.1')
+    this.client.on('error', function () {
+		this.log('Error event on MQTT');
+	  });
     this.currentTemperature = 21;
     this.currentRelativeHumidity = 50;
     this.targetTemperature = 21;
@@ -110,7 +114,7 @@ class Thermostat {
         this.startSystemTimer = setTimeout(() => {
           this.log(`START ${this.systemStateName(systemToTurnOn)}`);
           //gpio.write(HeatingCoolingStateToRelayPin[systemToTurnOn], ON);
-          request.get('http://127.0.0.1:8080/json.htm?type=command&param=switchlight&idx='+this.radiateuridx+'&switchcmd=On');
+          this.client.publish('pilote/'+this.radiateuridx,1);
           this.service.setCharacteristic(Characteristic.CurrentHeatingCoolingState, systemToTurnOn);
         }, this.startDelay);
       } else {
