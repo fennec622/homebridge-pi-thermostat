@@ -1,7 +1,7 @@
 //const gpio = require('rpi-gpio');
 //const dhtSensor = require('node-dht-sensor');
 //gpio.setMode(gpio.MODE_BCM);
-const request = require('request');
+//const request = require('request');
 var mqtt = require("mqtt");
 
 let Service, Characteristic, HeatingCoolingStateToRelayPin;
@@ -133,7 +133,7 @@ class Thermostat {
     if (!this.stopSystemTimer) {
       this.log(`STOP ${this.currentlyRunning} | Blower will turn off in ${this.blowerTurnOffTime / 1000} second(s)`);
       //gpio.write(HeatingCoolingStateToRelayPin[this.currentHeatingCoolingState], OFF);
-      request.get('http://127.0.0.1:8080/json.htm?type=command&param=switchlight&idx='+this.radiateuridx+'&switchcmd=Off');
+      this.client.publish('pilote/'+this.radiateuridx,0);
       this.stopSystemTimer = setTimeout(() => {
         this.service.setCharacteristic(Characteristic.CurrentHeatingCoolingState, Characteristic.CurrentHeatingCoolingState.OFF);
       }, this.blowerTurnOffTime);
